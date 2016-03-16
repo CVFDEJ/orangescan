@@ -2,6 +2,7 @@
 ##依赖
 ```
 pip3 install -r requirements.txt
+pip install redis
 apt-get install redis-server或者brew install redis
 ```
 ##启动
