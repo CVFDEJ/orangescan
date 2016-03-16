@@ -23,14 +23,14 @@ class DNSBrute:
         self._load_dns_servers()
         self._load_sub_names()
         self._load_next_sub()
-        outfile = scan_dir + 'log/' + target + '.txt'
+        outfile = tool_dir + 'log/' + target + '.txt'
         self.outfile = open(outfile, 'w')  # won't close manually
         self.ip_dict = {}
         self.STOP_ME = False
 
     def _load_dns_servers(self):
         dns_servers = []
-        with open(scan_dir + 'dict/dns_servers.txt') as f:
+        with open(tool_dir + 'dict/dns_servers.txt') as f:
             for line in f:
                 server = line.strip()
                 if server.count('.') == 3 and server not in dns_servers:
@@ -40,7 +40,7 @@ class DNSBrute:
 
     def _load_sub_names(self):
         self.queue = Queue.Queue()
-        file = scan_dir + 'dict/subnames_largest.txt'
+        file = tool_dir + 'dict/subnames_largest.txt'
         with open(file) as f:
             for line in f:
                 sub = line.strip()
@@ -48,7 +48,7 @@ class DNSBrute:
 
     def _load_next_sub(self):
         next_subs = []
-        with open(scan_dir + 'dict/next_sub.txt') as f:
+        with open(tool_dir + 'dict/next_sub.txt') as f:
             for line in f:
                 sub = line.strip()
                 if sub and sub not in next_subs:
@@ -133,7 +133,7 @@ class DNSBrute:
 
 
 if __name__ == '__main__':
-    scan_dir = config.scan_dir
+    tool_dir = config.tool_dir
     domain_db = config.domain_db
     log_db = config.log_db
     d = DNSBrute(target=sys.argv[1],
