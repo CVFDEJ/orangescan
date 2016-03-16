@@ -11,4 +11,4 @@ base_dir = '/Users/orange/Dropbox/OrangeScan/OrangeScan/app'
 scan_dir = '%s/tool/' % base_dir
 scanpy = '%s/tool/scan.py' % base_dir
 infopy = '%s/tool/info.py' % base_dir
-log_dir = '%s/log' % base_dir
+log_dir = '%s/tool/log' % base_dir
