@@ -12,7 +12,7 @@ import chardet
 import lxml.html as H
 from multiprocessing.dummy import Pool
 import requests
-import redis
+import config
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -21,16 +21,19 @@ threadpool = Pool(processes=100)
 TIMEOUT = 3
 scan_results = []
 
+
 def signal_handler(signal, frame):
     threadpool.terminate()
     threadpool.done = True
+
 
 def handle_result(host, port, result):
     tm = time.time()
     with lock:
         scan_results.append([host, port, result])
 
-def hscan_scan(*kw):
+
+def scan_scan(*kw):
     if len(*kw) == 2:
         host, port = kw[0][0], int(kw[0][1])
     else:
@@ -46,11 +49,8 @@ def hscan_scan(*kw):
             m = re.search(meta_reg, r.text, re.I)
             if m:
                 r.encoding = m.group(1)
-
             else:
-                # 没有meta设置编码，直接页面js跳转等, 默认设置为utf-8
                 r.encoding = 'utf-8'
-
         try:
             doc = H.document_fromstring(r.text)
             tag_list = doc.xpath('//%s' % ('title'))
@@ -82,7 +82,7 @@ def hscan_scan(*kw):
     return result
 
 
-def hscan_file_check(domains, result_file=None):
+def scan_file_check(domains, result_file=None):
     port_list = [80]
 
     scan_list = []
@@ -91,7 +91,7 @@ def hscan_file_check(domains, result_file=None):
         for port in port_list:
             scan_list.append([host, port])
 
-    task = threadpool.map(hscan_scan, scan_list)
+    task = threadpool.map(scan_scan, scan_list)
 
     threadpool.close()
     threadpool.join()
@@ -124,15 +124,14 @@ def hscan_file_check(domains, result_file=None):
                     title = "Null"
                 result = "%s:%s:%s:%s" % (domain, server, rcode, title)
                 infodb.sadd(domains, result)
-
-                f.write("%s\n" % (rs))
+                f.write("%s\n" % rs)
 
 
 if __name__ == '__main__':
-    domaindb = redis.Redis(host='localhost', port=6379, db=0)
-    infodb = redis.Redis(host='localhost', port=6379, db=6)
-    logdb = redis.Redis(host='localhost', port=6379, db=7)
-
+    domaindb = config.domain_db
+    infodb = config.info_db
+    logdb = config.log_db
+    logdir = config.log_dir
     domains = sys.argv[1]
-    output_file = "/root/scan/log/info/%s.txt" % sys.argv[1]
-    hscan_file_check(domains, output_file)
+    output_file = "%s/%s.txt" % (sys.argv[1], logdir)
+    scan_file_check(domains, output_file)
