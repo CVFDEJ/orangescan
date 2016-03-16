@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+ </head>
+ <body>
+   {% block head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/zui.min.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/zui-theme.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/light.css') }}" />
+  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
+  <title>{% block title %}{% endblock %}</title>
+   {% endblock %}
+  <div class="row">
+   <nav class="navbar navbar-inverse" role="navigation">
+    <!-- 导航头部 -->
+    <div class="navbar-header">
+     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse-example">
+         <span class="sr-only">切换导航</span>
+         <span class="icon-bar"></span>
+         <span class="icon-bar"></span>
+         <span class="icon-bar"></span>
+     </button>
+     <a class="navbar-brand" href="#">OrangeScan</a>
+    </div>
+    <!-- 导航项目 -->
+    <div class="collapse navbar-collapse navbar-collapse-example">
+     <!-- 一般导航项目 -->
+     <ul class="nav navbar-nav">
+      <li class="active"><a href="/domain">首页</a></li>
+      <li><a href="/domain"><i class="icon-node"></i> 子域名查询</a></li>
+         <li><a href="/create/domain"><i class="icon-edit"></i> 新建任务</a></li>
+      <li><a href="/about"><i class="icon-info"></i> 关于</a></li>
+     </ul>
+    </div>
+   </nav>
+  </div>
+  <div class="container">
+   <div class="row">
+   <div id="inputbox">{% block inputbox %}{% endblock %}</div>
+   </div>
+  </div>
+   <div class="container">
+   <div class="row">
+    <div id="content">{% block content %}{% endblock %}</div>
+
+    <div id="result" class="">{% block result %}{% endblock %}</div>
+   </div>
+  </div>
+    {% block index %}{% endblock %}
+  <script src="{{ url_for('static', filename='js/zui.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/zui.lite.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/jquery/jquery.js') }}"></script>
+{#  <script async="" src="{{ url_for('static', filename='lib/prettify/prettify.js') }}"></script>#}
+ </body>
+</html>

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+{% block content %}
+
+<article>
+    <div contenteditable="true" spellcheck="false" class="example"><br>
+      <ul class="breadcrumb">
+        <li><i class="icon-location-arrow icon-muted"></i></li>
+        <li><a href="#"></a>OrangeScan</li>&nbsp;<li class="active">About</li></ul>
+      <article class="article">
+        <header>
+          <h1 class="text-center">关于</h1>
+          <dl class="dl-inline">
+            <dt>发布时间：</dt>
+            <dd>2016-02-17 23:14:22</dd>
+            <dt>作者：</dt>
+            <dd>orange</dd>
+            <dt></dt>
+            <dd class="pull-right"><span class="label label-success">NEW</span>&nbsp;<span class="label label-danger"><i class="icon-eye-open"></i> 2350</span></dd>
+          </dl>
+          <section class="abstract">
+            <p><strong>摘要：子域名查询，实时扫描</strong></p></section></header><section class="article-content">
+{#          <p><a href="###4"></a>&nbsp;</p><p><br></p>#}
+          <blockquote>
+            <p>OrangeScan是一款在线の支持实时子域名查询的工具,数据存储在Redis中,子域名信息每24h更新一次.请不要恶意添加域名</p>
+{#            <small>orange</small>#}
+          </blockquote>
+          <h3><span style="font-size: 14px; line-height: 1.78571;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><br></h3><p><br></p>
+            <h4>Demo</h4>
+          <h5>Tips:查询时输入一级域名前几位就可以啦</h5>
+          <img src="{{ url_for('static', filename='demo.png') }}">
+          <p><br></p>
+        </section>
+        <footer>
+          <p class="pull-right text-muted">
+            发布时间：<span style="color: rgb(104, 104, 104); font-size: 12px; line-height: 18.4615px; background-color: rgb(241, 241, 241);">2016-02-17 23:14:22</span>&nbsp;&nbsp;点击数：2350
+          </p>
+          <p class="text-important">本文版权所有归<a href="###">@</a>orange</p><ul class="pager pager-justify">
+            <li class="next disabled"><a href="#">没有下一篇 <i class="icon-arrow-right"></i></a></li>
+          </ul>
+        </footer>
+      </article>
+    </div>
+  </article>
+{% endblock %}

@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+{% block inputbox %}
+{#    <span class="text-center img-responsive"><img src="http://img.ui.cn/data/file/0/2/7/74720.gif"></span>#}
+    <span><br></span>
+    <span><br></span>
+    <span><br></span>
+    <span><br></span>
+    <span><br></span>
+    <span><br></span>
+    <span><br></span>
+    <span><br></span>
+    <span><br></span>
+    <span><br></span>
+    <span><br></span>
+    <form action="{{ action }}" method="get">
+    <div class="input-group">
+            <span class="input-group-addon"><i class="icon-search"></i></span>
+            <input type="text" class="form-control" name="q" placeholder="{{ domain }}">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="submit">搜索</button>
+            </span>
+    </div>
+    </form>
+    <br>
+{% endblock %}
+
+{% block result %}
+{% if code=='200' %}
+    <div class="panel panel-success">
+    <div class="panel-heading">查询结果: 共 {{ subdomains.__len__() }} 个子域名  | 听说多刷新几次有惊喜(｀･ω･´) | <a target="_blank" class="icon-github" href="https://github.com/search?q={{ domain }}&type=Code&utf8=✓">看看github上是否有泄露信息?</a></div>
+
+    <table class="table table-striped table-hover">
+        <thread>
+        <tr>
+          <th><i class="icon-link"></i> 子域名</th>
+          <th><i class="icon-server"></i> 服务器</th>
+          <th><i class="icon-code"></i>状态码</th>
+          <th><i class="icon-book"></i> 标题</th>
+        </tr>
+        </thread>
+        <tbody>
+        {% for subdomain in subdomains %}
+
+        <tr class="primary" >
+            <script type="text/javascript">
+            var str="{{ subdomain }}";
+            info=str.split(":");
+            document.write('<td id="url"><h5><a target="_blank" href="http://'+info[0]+'">'+info[0]+'</a></h5></td>');
+                for (i=1;i<info.length;i++) {
+                    document.write("<td>"+info[i]+"</td>");
+                }
+            </script>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    {% endif %}
+
+    {% if code=='302' %}
+    <div class="panel panel-success">
+    <div class="panel-heading">查询结果: 共 {{ subdomains.__len__() }} 个子域名 |  听说刷新有惊喜(｀･ω･´)</div>
+    <table class="table table-bordered">
+        <thread>
+        <tr>
+          <th><i class="icon-link"></i> 子域名</th>
+        </tr>
+        </thread>
+        <tbody>
+        {% for subdomain in subdomains %}
+        <tr class="primary" >
+                <td id="url"><h5><a target="_blank" href="http://{{ subdomain }}">{{ subdomain }}</a></h5></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    {% endif %}
+    {% if code=='0' %}
+        <div class="panel panel-primary">
+    <div class="panel-heading">域名列表: 共 {{ domains.__len__() }} 个域名</div>
+    <table class="table table-bordered">
+        <thread>
+        <tr>
+          <th><i class="icon-link"></i> 域名 (点击查看子域名)</th>
+        </tr>
+        </thread>
+        <tbody>
+        {% for domain in domains %}
+        <tr class="primary" >
+            <td><h3> <a target="_blank" href="/domain?q={{ domain }}">{{ domain }}</a></h3></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    {% endif %}
+    {% if code=='404' %}
+        <div class="panel panel-danger">
+    <div class="panel-heading panel-danger">查询结果: </div>
+        <div class="panel-body">{{ result }} |  <a href="/create/domain?q={{ domain }}">添加到任务队列? </a></div>
+{#        <div class="panel-body">{{ result }}</div>#}
+        </div>
+    {% endif %}
+{% endblock %}
