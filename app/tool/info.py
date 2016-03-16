@@ -131,5 +131,5 @@ if __name__ == '__main__':
     logdb = config.log_db
     logdir = config.log_dir
     domains = sys.argv[1]
-    output_file = "%s/%s.txt" % (sys.argv[1], logdir)
+    output_file = "%s/%s.txt" % (logdir, sys.argv[1])
     scan_file_check(domains, output_file)
