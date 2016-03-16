@@ -1,17 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os
 import re
 import sys
-import time
-import signal
 import threading
-import socket
-import chardet
-import lxml.html as H
+import time
 from multiprocessing.dummy import Pool
+
+import lxml.html as H
 import requests
+
 import config
 
 reload(sys)
