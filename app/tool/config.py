@@ -10,4 +10,7 @@ log_db = redis.Redis(host='localhost', port=6379, db=3)
 
 scanpy_dir = 'subDomains-Xscan/'
 log_dir = '../log'
+base_dir = '/usr/local/share/subDomains-Xscan/'
+
+
 

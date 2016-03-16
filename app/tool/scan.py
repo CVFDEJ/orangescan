@@ -133,8 +133,6 @@ if __name__ == '__main__':
     base_dir = config.base_dir
     domain_db = config.domain_db
     log_db = config.log_db
-    ip_db = config.ip_db
-    test_db = config.test_db
     d = DNSBrute(target=sys.argv[1],
                  ignore_intranet=False,
                  threads_num=255,
