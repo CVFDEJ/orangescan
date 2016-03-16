@@ -8,7 +8,7 @@ import time
 
 import dns.resolver
 
-from app import config
+import config
 
 
 class DNSBrute:

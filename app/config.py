@@ -10,5 +10,5 @@ log_db = redis.Redis(host='localhost', port=6379, db=3)
 base_dir = '/Users/orange/Dropbox/OrangeScan/OrangeScan'
 scan_dir = '%s/tool' % base_dir
 scanpy = '%s/app/tool/scan.py' % base_dir
-infopy = '%s/app/tool/indo.py' % base_dir
+infopy = '%s/app/tool/info.py' % base_dir
 log_dir = '%s/app/log' % base_dir
