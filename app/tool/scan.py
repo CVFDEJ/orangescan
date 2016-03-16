@@ -2,11 +2,14 @@
 # -*- encoding: utf-8 -*-
 
 import Queue
-import dns.resolver
+import sys
 import threading
 import time
-import config
-import sys
+
+import dns.resolver
+
+from app import config
+
 
 class DNSBrute:
     def __init__(self, target, ignore_intranet, threads_num):
@@ -20,14 +23,14 @@ class DNSBrute:
         self._load_dns_servers()
         self._load_sub_names()
         self._load_next_sub()
-        outfile = base_dir + 'log/' + target + '.txt'
+        outfile = scan_dir + 'log/' + target + '.txt'
         self.outfile = open(outfile, 'w')  # won't close manually
         self.ip_dict = {}
         self.STOP_ME = False
 
     def _load_dns_servers(self):
         dns_servers = []
-        with open(base_dir + 'dict/dns_servers.txt') as f:
+        with open(scan_dir + 'dict/dns_servers.txt') as f:
             for line in f:
                 server = line.strip()
                 if server.count('.') == 3 and server not in dns_servers:
@@ -37,7 +40,7 @@ class DNSBrute:
 
     def _load_sub_names(self):
         self.queue = Queue.Queue()
-        file = base_dir + 'dict/subnames_largest.txt'
+        file = scan_dir + 'dict/subnames_largest.txt'
         with open(file) as f:
             for line in f:
                 sub = line.strip()
@@ -45,7 +48,7 @@ class DNSBrute:
 
     def _load_next_sub(self):
         next_subs = []
-        with open(base_dir + 'dict/next_sub.txt') as f:
+        with open(scan_dir + 'dict/next_sub.txt') as f:
             for line in f:
                 sub = line.strip()
                 if sub and sub not in next_subs:
@@ -130,7 +133,7 @@ class DNSBrute:
 
 
 if __name__ == '__main__':
-    base_dir = config.base_dir
+    scan_dir = config.scan_dir
     domain_db = config.domain_db
     log_db = config.log_db
     d = DNSBrute(target=sys.argv[1],

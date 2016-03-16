@@ -1,13 +1,15 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-from flask import request
-from flask import render_template
-from app import app
-from app import config
 import os
 import re
+
 import psutil
+from flask import render_template
+from flask import request
+
+from app import app
+from app import config
 
 
 @app.route('/')
@@ -54,7 +56,7 @@ def new_task():
     elif regExp(domain, 'domain'):
         config.queue_db.set(domain, '0')
         config.log_db.set(domain, -1)
-        os.system('python /usr/local/share/subDomains-Xscan/run.py %s&' % domain)
+        os.system('python %s %s&' % (config.scanpy, domain))
         return render_template('task.html', result='任务添加成功', domain=domain)
     else:
         return render_template('task.html')
@@ -74,11 +76,11 @@ def search(q):
         domain = str(logdb.keys('*%s*' % q)[0], 'utf-8')
         if infodb.exists(domain):
             subdomains = choosedb(infodb, domain)
-            os.system('python /root/scan/info.py %s&' % domain)
+            os.system('python %s %s&' % (config.infopy, domain))
             code = '200'
         else:
             subdomains = choosedb(domaindb, domain)
-            os.system('python /root/scan/info.py %s&' % domain)
+            os.system('python %s %s&' % (config.infopy, domain))
             code = '302'
         return domain, subdomains, code
     else:
@@ -104,8 +106,8 @@ def getSubdomain():
         if not config.log_db.exists(task):
             config.log_db.set(task, -1)
         elif config.log_db.get(task) == '-1':
-            if int(os.popen('ps -h|grep subDomains-Xscan|wc -l').read()) < 6:
-                os.system('python /usr/local/share/subDomains-Xscan/run.py %s&' % str(task, 'utf-8'))
+            if int(os.popen('ps -h|grep scan.py|wc -l').read()) < 6:
+                os.system('python %s %s&' % (config.scanpy, str(task, 'utf-8')))
             else:
                 pass
         elif config.log_db.get(task) == '0':
