@@ -10,6 +10,7 @@ apt-get install redis-server或者brew install redis
 
 因为某接口备份dump.rdb,需要配置app/config.py中的redis_dir
 
+备份方法http://localhost/bak
 ##启动
 ```
 redis-server
@@ -25,3 +26,4 @@ python3 run.py 80
  - 数据存储问题
  
  由于数据存储在Redis中,请安全启动Redis,并定时备份
+
