@@ -14,3 +14,10 @@ apt-get install redis-server或者brew install redis
 redis-server
 python3 run.py 80
 ```
+##常见问题
+
+ - 无法解析域名
+
+```
+/etc/init.d/networking restart
+```
