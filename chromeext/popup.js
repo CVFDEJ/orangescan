@@ -6,6 +6,8 @@ function scanDomain(scanUrl, domainReg) {
         var i = domain.length;
         if (domain[i - 2] == 'com' && domain[i - 1] == 'cn') {
             domain = domain[i - 3] + '.' + domain[i - 2] + '.' + domain[i - 1];
+        } else if (domain[i - 2] == 'net' && domain[i - 1] == 'cn') {
+            domain = domain[i - 3] + '.' + domain[i - 2] + '.' + domain[i - 1];
         } else {
             domain = domain[i - 2] + "." + domain[i - 1];
         }
