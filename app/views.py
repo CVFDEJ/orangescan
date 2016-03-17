@@ -51,7 +51,7 @@ def new_task():
     elif regExp(domain, 'domain'):
         config.queue_db.set(domain, '0')
         config.log_db.set(domain, -1)
-        os.system('python %s %s&' % (config.scanpy, domain))
+        os.system('python %s %s&' % (config.scan_py, domain))
         return render_template('task.html', result='任务添加成功', domain=domain)
     else:
         return render_template('task.html')
@@ -71,11 +71,11 @@ def search(q):
         domain = str(logdb.keys('*%s*' % q)[0], 'utf-8')
         if infodb.exists(domain):
             subdomains = choosedb(infodb, domain)
-            os.system('python %s %s&' % (config.infopy, domain))
+            os.system('python %s %s&' % (config.info_py, domain))
             code = '200'
         else:
             subdomains = choosedb(domaindb, domain)
-            os.system('python %s %s&' % (config.infopy, domain))
+            os.system('python %s %s&' % (config.info_py, domain))
             code = '302'
         return domain, subdomains, code
     else:
