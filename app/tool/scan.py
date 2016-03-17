@@ -24,7 +24,7 @@ class DNSBrute:
         self._load_sub_names()
         self._load_next_sub()
         outfile = tool_dir + 'log/' + target + '.txt'
-        self.outfile = open(outfile, 'w')  # won't close manually
+        self.outfile = open(outfile, 'a+')  # won't close manually
         self.ip_dict = {}
         self.STOP_ME = False
 
