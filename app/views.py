@@ -17,11 +17,6 @@ def index():
     return render_template('index.html', title='首页')
 
 
-@app.route('/about')
-def about():
-    return render_template('about.html', title='关于')
-
-
 @app.route('/domain')
 def domain():
     return render_template('domain.html', title='子域名查询', action='/domain/search', domain='请输入企业一级域名，如：site.com, 支持模糊搜索')
