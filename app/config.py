@@ -13,3 +13,4 @@ tool_dir = '%s/app/tool/' % base_dir
 log_dir = '%s/app/tool/log' % base_dir
 scan_py = '%s/app/tool/scan.py' % base_dir
 info_py = '%s/app/tool/info.py' % base_dir
+redis_dir = ''

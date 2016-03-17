@@ -6,6 +6,9 @@ pip3 install -r requirements.txt
 pip install redis
 apt-get install redis-server或者brew install redis
 ```
+##配置
+
+因为某接口备份dump.rdb,需要配置app/config.py中的redis_dir
 
 ##启动
 ```

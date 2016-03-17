@@ -3,6 +3,7 @@
 
 import os
 import re
+import time
 
 import psutil
 from flask import render_template
@@ -63,6 +64,11 @@ def new_task():
     else:
         return render_template('task.html')
 
+
+@app.route('/bak')
+def rdsbak():
+    os.system('cp %s/dump.rdb %s/bak/dump.rdb%d' % (config.redis_dir, config.redis_dir, int(time.time())))
+    return 'ok'
 
 @app.errorhandler(404)
 def page_not_found(e):
