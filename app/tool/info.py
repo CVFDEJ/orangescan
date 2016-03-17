@@ -100,7 +100,7 @@ def scan_file_check(domains, result_file=None):
             vul_results.append(x)
 
     if result_file:
-        with open(result_file, 'w') as f:
+        with open(result_file, 'w+') as f:
             for x in vul_results:
                 h, p, r = x
                 rs = ""
