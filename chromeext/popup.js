@@ -4,8 +4,13 @@ function scanDomain(scanUrl, domainReg) {
         var domain = domainReg.exec(domainUrl);
         domain = domain[0].split('.');
         var i = domain.length;
-        domain = domain[i - 2] + "." + domain[i - 1];
-        scanUrl.innerHTML = "<a href='http://101.200.161.172/domain/search?q=" + domain + "' target='_blank'>scan</a>";
+        if (domain[i - 2] == 'com' && domain[i - 1] == 'cn') {
+            domain = domain[i - 3] + '.' + domain[i - 2] + '.' + domain[i - 1];
+        } else {
+            domain = domain[i - 2] + "." + domain[i - 1];
+        }
+
+        scanUrl.innerHTML = "<a href='http://101.200.161.172/create/domain?q=" + domain + "' target='_blank'>scan</a>";
         return domain;
     });
 }
