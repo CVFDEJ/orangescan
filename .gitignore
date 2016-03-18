@@ -58,3 +58,6 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+
+#Mac os x
+.DS_Store
