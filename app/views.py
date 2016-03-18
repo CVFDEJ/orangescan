@@ -27,7 +27,10 @@ def index_site():
 
 @app.route('/domain')
 def index_domain():
-    return render_template('domain.html', title='子域名查询', action='/domain/search', domain='请输入企业一级域名，如：site.com, 支持模糊搜索')
+    return render_template('domain.html',
+                           title='子域名查询',
+                           action='/domain/search',
+                           domain='请输入企业一级域名，如：site.com, 支持模糊搜索')
 
 
 @app.route('/domain/search', methods=['POST', 'GET'])
@@ -37,17 +40,22 @@ def query_domain():
     qtype = 'domain'
     if search(q):
         domain, subdomains, code = search(q)
-        return render_template('domain.html', subdomains=subdomains, title='查询结果 : %s' % domain,
+        return render_template('domain.html',
+                               subdomains=subdomains,
+                               title='查询结果 : %s' % domain,
                                action='/domain/search',
-                               domain=domain, code=code)
+                               domain=domain,
+                               code=code)
     elif reg_exp(q, qtype):
         domain = q
-        return render_template('domain.html', title='查询结果 : %s' % domain,
-                               result='%s还未扫描, 当前cpu占用' % domain + str(psutil.cpu_percent()) + "%",
+        return render_template('domain.html',
+                               title='查询结果 : %s' % domain,
+                               result='%s还未扫描, 当前cpu占用%s%' % (domain, str(psutil.cpu_percent())),
                                action='/domain/search',
                                domain=q, code='404')
     else:
-        return render_template('domain.html', title='子域名查询',
+        return render_template('domain.html',
+                               title='子域名查询',
                                action='/domain/search')
 
 
@@ -55,12 +63,16 @@ def query_domain():
 def create_task():
     domain = request.args.get('q', '').lower()
     if config.domain_db.exists(domain):
-        return render_template('task.html', result='任务已完成,点击查看', domain=domain)
+        return render_template('task.html',
+                               result='任务已完成,点击查看',
+                               domain=domain)
     elif reg_exp(domain, 'domain'):
         config.queue_db.set(domain, '0')
         config.log_db.set(domain, -1)
         os.system('python %s %s&' % (config.scan_py, domain))
-        return render_template('task.html', result='任务添加成功', domain=domain)
+        return render_template('task.html',
+                               result='任务添加成功',
+                               domain=domain)
     else:
         return render_template('task.html')
 
