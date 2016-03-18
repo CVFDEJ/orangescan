@@ -33,7 +33,7 @@ def domain():
 @app.route('/domain/search', methods=['POST', 'GET'])
 @app.route('/search', methods=['POST', 'GET'])
 def query_domain():
-    q = request.args.get('q', '')
+    q = request.args.get('q', '').lower()
     qtype = 'domain'
     if search(q):
         domain, subdomains, code = search(q)
@@ -53,7 +53,7 @@ def query_domain():
 
 @app.route('/create/domain', methods=['POST', 'GET'])
 def new_task():
-    domain = request.args.get('q', '')
+    domain = request.args.get('q', '').lower()
     if config.domain_db.exists(domain):
         return render_template('task.html', result='任务已完成,点击查看', domain=domain)
     elif regExp(domain, 'domain'):
