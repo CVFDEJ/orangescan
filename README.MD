@@ -1,5 +1,6 @@
 #OrangeScan
 
+![](https://raw.githubusercontent.com/0xbug/OrangeScan/master/demo.gif)
 ##依赖
 ```
 pip3 install -r requirements.txt
@@ -18,12 +19,13 @@ python3 run.py 80
 ```
 ##常见问题
 
- - 无法解析域名
+ - 无法解析域名 
 
 ```
 /etc/init.d/networking restart
 ```
  - 数据存储问题
- 
- 由于数据存储在Redis中,请安全启动Redis,并定时备份
 
+ 由于数据存储在Redis中,请安全启动Redis,并定时备份
+ - 其他问题?
+ 请提交到Issues,或乌云社区留言
