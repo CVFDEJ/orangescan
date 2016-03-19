@@ -1,4 +1,4 @@
-function scanDomain(scanUrl, domainReg) {
+function scanDomain(createUrl, searchUrl, domainReg) {
     chrome.tabs.getSelected(null, function (tab) {
         var domainUrl = tab.url;
         var domain = domainReg.exec(domainUrl);
@@ -11,11 +11,12 @@ function scanDomain(scanUrl, domainReg) {
         } else {
             domain = domain[i - 2] + "." + domain[i - 1];
         }
-
-        scanUrl.innerHTML = "<a href='http://101.200.161.172/create/domain?q=" + domain + "' target='_blank'>scan</a>";
+        createUrl.innerHTML = "<button><a href='http://101.200.161.172/create/domain?q=" + domain + "' target='_blank'>create</a></button><br><br>";
+        searchUrl.innerHTML = "<button><a href='http://101.200.161.172/domain/search?q=" + domain + "' target='_blank'>search</a></button>";
         return domain;
     });
 }
 var domainReg = /[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?/;
-var scanUrl = document.getElementById('curDomain');
-scanDomain(scanUrl, domainReg);
+var createUrl = document.getElementById('create');
+var searchUrl = document.getElementById('search');
+scanDomain(createUrl, searchUrl, domainReg);

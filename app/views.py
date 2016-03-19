@@ -62,7 +62,7 @@ def query_domain():
 @app.route('/create/domain', methods=['POST', 'GET'])
 def create_task():
     domain = request.args.get('q', '').lower()
-    if config.domain_db.exists(domain):
+    if config.log_db.exists(domain):
         return render_template('task.html',
                                result='任务已完成,点击查看',
                                domain=domain)
