@@ -61,5 +61,7 @@ target/
 
 #Mac os x
 .DS_Store
+
+
 #idea
-*.xml
+.xml
