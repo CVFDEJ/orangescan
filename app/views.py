@@ -51,7 +51,7 @@ def query_domain():
         cpustatus = str(psutil.cpu_percent())
         return render_template('domain.html',
                                title='查询结果 : %s' % domain,
-                               result='%s还未扫描, 当前cpu占用%s%' % (domain, cpustatus),
+                               result='%s还未扫描, 当前cpu占用%s' % (domain, cpustatus),
                                action='/domain/search',
                                domain=domain, code='404')
     else:
