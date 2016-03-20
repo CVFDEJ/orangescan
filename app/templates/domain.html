@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block inputbox %}
-<!--<span class="text-center img-responsive"><img src="http://img.ui.cn/data/file/0/2/7/74720.gif"></span>-->
+<span class="text-center img-responsive"><img src="{{ url_for('static', filename='icon.png') }}"></span>
     <span><br></span>
     <span><br></span>
     <span><br></span>
@@ -104,7 +104,6 @@
         <div class="panel panel-danger">
     <div class="panel-heading panel-danger">查询结果: </div>
         <div class="panel-body">{{ result }} |  <a href="/create/domain?q={{ domain }}">添加到任务队列? </a></div>
-{#        <div class="panel-body">{{ result }}</div>#}
         </div>
     {% endif %}
 {% endblock %}

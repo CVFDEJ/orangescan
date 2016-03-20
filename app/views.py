@@ -48,11 +48,12 @@ def query_domain():
                                code=code)
     elif reg_exp(q, qtype):
         domain = q
+        cpustatus = str(psutil.cpu_percent())
         return render_template('domain.html',
                                title='查询结果 : %s' % domain,
-                               result='%s还未扫描, 当前cpu占用%s%' % (domain, str(psutil.cpu_percent())),
+                               result='%s还未扫描, 当前cpu占用%s%' % (domain, cpustatus),
                                action='/domain/search',
-                               domain=q, code='404')
+                               domain=domain, code='404')
     else:
         return render_template('domain.html',
                                title='子域名查询',
@@ -60,6 +61,7 @@ def query_domain():
 
 
 @app.route('/create/domain', methods=['POST', 'GET'])
+@app.route('/domain/create', methods=['POST', 'GET'])
 def create_task():
     domain = request.args.get('q', '').lower()
     if config.log_db.exists(domain):
@@ -93,8 +95,8 @@ def search(q):
     info_db = config.info_db
     log_db = config.log_db
 
-    if log_db.keys('*%s*' % q):
-        domain = str(log_db.keys('*%s*' % q)[0], 'utf-8')
+    if log_db.keys('%s*' % q):
+        domain = str(log_db.keys('%s*' % q)[0], 'utf-8')
         if info_db.exists(domain):
             subdomains = choose_db(info_db, domain)
             os.system('python %s %s&' % (config.info_py, domain))
