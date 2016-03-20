@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Extension Name</key>
+	<string>Orange Scan</string>
+	<key>Extension Identifier</key>
+	<string>com.orangescan.popclip.extension.orange-scan</string>
+	<key>Extension Description</key>
+	<string>search subdomain in a web browser with the selected text.</string>
+	<key>Actions</key>
+	<array>
+		<dict>
+			<key>URL</key>
+			<string>http://101.200.161.172/domain/search?q={popclip text}</string>
+			<key>Image File</key>
+			<string>icon.png</string>
+			<key>Title</key>
+			<string>Orange Scan</string>
+			<key>Regular Expression</key>
+			<string>^(?=^.{3,255}$)[a-z0-9][-a-z0-9]{0,62}(\.(com\.cn|tw|com|hk|cn|net|cc|me|jp){0,65})+$</string>
+		</dict>
+	</array>
+</dict>
+</plist>
