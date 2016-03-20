@@ -99,11 +99,11 @@ def search(q):
         domain = str(log_db.keys('%s*' % q)[0], 'utf-8')
         if info_db.exists(domain):
             subdomains = choose_db(info_db, domain)
-            os.system('python %s %s&' % (config.info_py, domain))
+            os.system('python3 %s %s&' % (config.info_py, domain))
             code = '200'
         else:
             subdomains = choose_db(domain_db, domain)
-            os.system('python %s %s&' % (config.info_py, domain))
+            os.system('python3 %s %s&' % (config.info_py, domain))
             code = '302'
         return domain, subdomains, code
     else:
