@@ -129,7 +129,7 @@ def api_scan_domain(domain_name):
 
 
 @app.route('/api/v1.1/domain/<string:domain_name>', methods=['GET'])
-def api_get_domain(domain_name):
+def api_get_domain_v1_1(domain_name):
     """
 
     :param domain_name:
