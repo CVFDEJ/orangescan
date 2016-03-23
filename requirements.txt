@@ -4,3 +4,4 @@ redis==2.10.5
 psutil==3.4.2
 lxml
 requests
+pymongo
