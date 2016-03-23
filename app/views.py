@@ -13,7 +13,7 @@ from flask import make_response
 from flask import send_from_directory
 
 from app import app
-from app.config import domain_db,log_db,info_db,scan_py,info_py,redis_dir,queue_db,collection
+from app.config import domain_db, log_db, info_db, scan_py, info_py, redis_dir, queue_db, collection
 
 
 @app.route('/favicon.ico')
@@ -92,7 +92,6 @@ def page_not_found(e):
     return render_template('404.html'), 404
 
 
-
 # api
 
 @app.route('/api/v1.0/domain/<string:domain_name>', methods=['GET'])
@@ -107,7 +106,7 @@ def api_get_domain(domain_name):
             'count': len(subdomains),
             'subdomains': subdomains,
         }]
-        return jsonify({'result': result, 'reason': 'Success', 'error_code': 200})
+        return make_response(jsonify({'result': result, 'reason': 'Success', 'error_code': 200}))
     else:
         return make_response(jsonify({'result': [], 'reason': 'Not found', 'error_code': 404}), 404)
 
@@ -124,10 +123,6 @@ def api_scan_domain(domain_name):
         return make_response(jsonify({'result': [], 'reason': 'Fail', 'error_code': 500}), 500)
 
 
-
-
-
-
 @app.route('/api/v1.1/domain/<string:domain_name>', methods=['GET'])
 def api_get_domain_v1_1(domain_name):
     """
@@ -138,7 +133,7 @@ def api_get_domain_v1_1(domain_name):
 
     subdomain_col = collection.subdomain
     try:
-        result = subdomain_col.find({"domain":domain_name})
+        result = subdomain_col.find({"domain": domain_name})
         if result:
             return jsonify({'result': result[0], 'reason': 'Success', 'error_code': 200})
         else:
@@ -147,10 +142,7 @@ def api_get_domain_v1_1(domain_name):
         return make_response(jsonify({'result': [], 'reason': 'Not found', 'error_code': 404}), 404)
 
 
-
-
 def search(q):
-
     if log_db.keys('%s*' % q):
         domain = str(log_db.keys('%s*' % q)[0], 'utf-8')
         if info_db.exists(domain):
@@ -196,6 +188,7 @@ def get_subdomain():
         else:
             pass
 
+
 def scan_task_domain(domain):
     task_count = int(os.popen('ps -h|grep subDomains-Xscan|wc -l').read())
 
@@ -210,6 +203,7 @@ def scan_task_domain(domain):
             return False
     else:
         return False
+
 
 def task_queue():
     return None
