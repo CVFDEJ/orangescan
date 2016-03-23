@@ -94,8 +94,8 @@ def scan_file_check(domain):
         if server:
             server = server.replace(":", "/")
         target = tu.replace("http://", "").replace(":80", "")
-        if len(server) == 0: server = "Null"
-        if len(title) == 0: title = "Null"
+        if server == None: server = "Null"
+        if title == None: title = "Null"
         result = "%s:%s:%s:%s" % (target, server, httpcode, title)
         info_db.sadd(domain, result)
         log_db.set(domain, 1)
