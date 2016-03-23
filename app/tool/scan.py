@@ -8,7 +8,7 @@ import time
 
 import dns.resolver
 
-import config
+from config import domain_db,log_db,tool_dir
 
 
 class DNSBrute:
@@ -133,9 +133,6 @@ class DNSBrute:
 
 
 if __name__ == '__main__':
-    tool_dir = config.tool_dir
-    domain_db = config.domain_db
-    log_db = config.log_db
     d = DNSBrute(target=sys.argv[1],
                  ignore_intranet=False,
                  threads_num=255,
