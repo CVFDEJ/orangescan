@@ -4,18 +4,11 @@
   {{ super() }}
 {% endblock %}
 {% block inputbox %}
-<!--<span class="text-center img-responsive"><img src="http://img.ui.cn/data/file/0/2/7/74720.gif"></span>-->
-<span><br></span>
-<span><br></span>
-<span><br></span>
-<span><br></span>
-<span><br></span>
-<span><br></span>
-<span><br></span>
-<span><br></span>
-<span><br></span>
-<span><br></span>
-<span><br></span>
+<span class="text-center img-responsive"><img src="{{ url_for('static', filename='icon.png') }}"></span>
+
+    <span><br></span>
+    <span><br></span>
+    <span><br></span>
 
 <form action="/create/domain" method="get">
     <div class="input-group">

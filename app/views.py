@@ -8,10 +8,12 @@ import time
 import psutil
 from flask import render_template
 from flask import request
+from flask import jsonify
+from flask import make_response
 from flask import send_from_directory
 
 from app import app
-from app import config
+from config import domain_db,log_db,info_db,scan_py,info_py,redis_dir,queue_db,collection
 
 
 @app.route('/favicon.ico')
@@ -64,14 +66,14 @@ def query_domain():
 @app.route('/domain/create', methods=['POST', 'GET'])
 def create_task():
     domain = request.args.get('q', '').lower()
-    if config.log_db.exists(domain):
+    if log_db.exists(domain):
         return render_template('task.html',
                                result='任务已完成,点击查看',
                                domain=domain)
     elif reg_exp(domain, 'domain'):
-        config.queue_db.set(domain, '0')
-        config.log_db.set(domain, -1)
-        os.system('python %s %s&' % (config.scan_py, domain))
+        queue_db.set(domain, '0')
+        log_db.set(domain, '-1')
+        os.system('python %s %s&' % (scan_py, domain))
         return render_template('task.html',
                                result='任务添加成功',
                                domain=domain)
@@ -81,7 +83,7 @@ def create_task():
 
 @app.route('/bak')
 def bak_rds():
-    os.system('cp %s/dump.rdb %s/bak/dump.rdb%d' % (config.redis_dir, config.redis_dir, int(time.time())))
+    os.system('cp %s/dump.rdb %s/bak/dump.rdb%d' % (redis_dir, redis_dir, int(time.time())))
     return 'ok'
 
 
@@ -90,20 +92,92 @@ def page_not_found(e):
     return render_template('404.html'), 404
 
 
+
+# api
+
+@app.route('/api/v1.0/domain/<string:domain_name>', methods=['GET'])
+def get_domain(domain_name):
+    subdomains = []
+    if domain_db.exists(domain_name):
+        for subdomain in domain_db.smembers(domain_name):
+            subdomains.append(str(subdomain, 'utf-8'))
+        result = [{
+            'domain': domain_name,
+            'favicon': 'http://www.%s/favicon.ico'%domain_name,
+            'status': int(log_db.get(domain_name)),
+            'count': len(subdomains),
+            'subdomains': subdomains,
+            'github': 'https://github.com/search?q=%s username password&type=Code&utf8=✓' % domain_name,
+        }]
+        return jsonify({'result': result, 'reason': 'Success', 'error_code': 200})
+    else:
+        return make_response(jsonify({'result': [], 'reason': 'Not found', 'error_code': 404}), 404)
+
+
+@app.route('/api/v1.0/domain/<string:domain_name>', methods=['POST'])
+def scan_domain(domain_name):
+    if scan_task_domain(domain_name):
+        result = [{
+            'domain': domain_name,
+            'status': int(log_db.get(domain_name)),
+        }]
+        return jsonify({'result': result, 'reason': 'Success', 'error_code': 200})
+    else:
+        return make_response(jsonify({'result': [], 'reason': 'Fail', 'error_code': 500}), 500)
+
+
+
+@app.route('/api/v1.0/info/<string:domain_name>', methods=['GET'])
+def get_info(domain_name):
+    infos = []
+    if info_db.exists(domain_name):
+        for info in info_db.smembers(domain_name):
+            infos.append(str(info, 'utf-8'))
+        result = [{
+            'domain': domain_name,
+            'favicon': 'http://www.%s/favicon.ico'%domain_name,
+            'status': int(log_db.get(domain_name)),
+            'count': len(infos),
+            'subdomains': infos,
+            'github': 'https://github.com/search?q=%s username password&type=Code&utf8=✓' % domain_name,
+        }]
+        return jsonify({'result': result, 'reason': 'Success', 'error_code': 200})
+    else:
+        return make_response(jsonify({'result': [], 'reason': 'Not found', 'error_code': 404}), 404)
+
+
+@app.route('/api/v1.1/domain/<string:domain_name>', methods=['GET'])
+def api_get_domain(domain_name):
+    """
+
+    :param domain_name:
+    :return: {'result': '', 'reason': '', 'error_code': ''}
+    """
+
+    subdoamin_col = collection.subdoamin
+    try:
+        result = subdoamin_col.find({"domain":domain_name})
+        if result:
+            return jsonify({'result': result[0], 'reason': 'Success', 'error_code': 200})
+        else:
+            return make_response(jsonify({'result': [], 'reason': 'Not found', 'error_code': 404}), 404)
+    except:
+        return make_response(jsonify({'result': [], 'reason': 'Not found', 'error_code': 404}), 404)
+
+
+
+
 def search(q):
-    domain_db = config.domain_db
-    info_db = config.info_db
-    log_db = config.log_db
 
     if log_db.keys('%s*' % q):
         domain = str(log_db.keys('%s*' % q)[0], 'utf-8')
         if info_db.exists(domain):
             subdomains = choose_db(info_db, domain)
-            os.system('python3 %s %s&' % (config.info_py, domain))
+            os.system('python3 %s %s&' % (info_py, domain))
             code = '200'
         else:
             subdomains = choose_db(domain_db, domain)
-            os.system('python3 %s %s&' % (config.info_py, domain))
+            os.system('python3 %s %s&' % (info_py, domain))
             code = '302'
         return domain, subdomains, code
     else:
@@ -125,17 +199,35 @@ def reg_exp(q, qtype):
 
 
 def get_subdomain():
-    for task in config.queue_db.keys():
-        if not config.log_db.exists(task):
-            config.log_db.set(task, -1)
-        elif config.log_db.get(task) == '-1':
+    for task in queue_db.keys():
+        if not log_db.exists(task):
+            log_db.set(task, -1)
+        elif log_db.get(task) == '-1':
             if int(os.popen('ps -h|grep scan.py|wc -l').read()) < 6:
-                os.system('python %s %s&' % (config.scan_py, str(task, 'utf-8')))
+                os.system('python %s %s&' % (scan_py, str(task, 'utf-8')))
             else:
                 pass
-        elif config.log_db.get(task) == '0':
-            config.queue_db.delete(task)
-        elif config.log_db.get(task) == '1':
-            config.queue_db.delete(task)
+        elif log_db.get(task) == '0':
+            queue_db.delete(task)
+        elif log_db.get(task) == '1':
+            queue_db.delete(task)
         else:
             pass
+
+def scan_task_domain(domain):
+    task_count = int(os.popen('ps -h|grep subDomains-Xscan|wc -l').read())
+
+    if reg_exp(domain, 'domain'):
+        if log_db.exists(domain):
+            return True
+        elif task_count < 50:
+            log_db.set(domain, -1)
+            os.system('python %s %s&' % (scan_py, str(domain, 'utf-8')))
+            return True
+        else:
+            return False
+    else:
+        return False
+
+def task_queue():
+    return None
