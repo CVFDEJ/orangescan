@@ -177,7 +177,7 @@ def get_subdomain():
         if not log_db.exists(task):
             log_db.set(task, -1)
         elif log_db.get(task) == '-1':
-            if int(os.popen('ps -h|grep scan.py|wc -l').read()) < 6:
+            if int(os.popen('ps -h|grep scan.py|wc -l').read()) < 60:
                 os.system('python %s %s&' % (scan_py, str(task, 'utf-8')))
             else:
                 pass
@@ -197,7 +197,7 @@ def scan_task_domain(domain):
             return True
         elif task_count < 50:
             log_db.set(domain, -1)
-            os.system('python %s %s&' % (scan_py, str(domain, 'utf-8')))
+            os.system('python %s %s&' % (scan_py, domain))
             return True
         else:
             return False
