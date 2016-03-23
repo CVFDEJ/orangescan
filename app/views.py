@@ -13,7 +13,7 @@ from flask import make_response
 from flask import send_from_directory
 
 from app import app
-from config import domain_db,log_db,info_db,scan_py,info_py,redis_dir,queue_db,collection
+from app.config import domain_db,log_db,info_db,scan_py,info_py,redis_dir,queue_db,collection
 
 
 @app.route('/favicon.ico')
