@@ -41,7 +41,7 @@ def scan_scan(*kw):
                 title = tag_list[0].text
 
         except:
-            title = "Null"
+            title = ""
 
         if r.status_code:
             httpcode = r.status_code
@@ -86,19 +86,22 @@ def scan_file_check(domain):
         h, p, r = x
         tu, httpcode, server, title = r
         if title:
-            title = title.replace("\r\n", "")\
-                    .replace("\n", "")\
-                    .replace("\r", "")\
-                    .replace("\t", "")\
-                    .replace(":", "")
+            title = title.replace("\r\n", "") \
+                .replace("\n", "") \
+                .replace("\r", "") \
+                .replace("\t", "") \
+                .replace(":", "")
         if server:
             server = server.replace(":", "/")
         target = tu.replace("http://", "").replace(":80", "")
-        if server == None: server = "Null"
-        if title == None: title = "Null"
+        if server is None:
+            server = ""
+        if title is None:
+            title = ""
         result = "%s:%s:%s:%s" % (target, server, httpcode, title)
         info_db.sadd(domain, result)
         log_db.set(domain, 1)
+
 
 if __name__ == '__main__':
     lock = threading.Lock()
