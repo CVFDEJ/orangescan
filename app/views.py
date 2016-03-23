@@ -96,18 +96,16 @@ def page_not_found(e):
 # api
 
 @app.route('/api/v1.0/domain/<string:domain_name>', methods=['GET'])
-def get_domain(domain_name):
+def api_get_domain(domain_name):
     subdomains = []
     if domain_db.exists(domain_name):
         for subdomain in domain_db.smembers(domain_name):
             subdomains.append(str(subdomain, 'utf-8'))
         result = [{
             'domain': domain_name,
-            'favicon': 'http://www.%s/favicon.ico'%domain_name,
             'status': int(log_db.get(domain_name)),
             'count': len(subdomains),
             'subdomains': subdomains,
-            'github': 'https://github.com/search?q=%s username password&type=Code&utf8=✓' % domain_name,
         }]
         return jsonify({'result': result, 'reason': 'Success', 'error_code': 200})
     else:
@@ -115,7 +113,7 @@ def get_domain(domain_name):
 
 
 @app.route('/api/v1.0/domain/<string:domain_name>', methods=['POST'])
-def scan_domain(domain_name):
+def api_scan_domain(domain_name):
     if scan_task_domain(domain_name):
         result = [{
             'domain': domain_name,
@@ -127,23 +125,7 @@ def scan_domain(domain_name):
 
 
 
-@app.route('/api/v1.0/info/<string:domain_name>', methods=['GET'])
-def get_info(domain_name):
-    infos = []
-    if info_db.exists(domain_name):
-        for info in info_db.smembers(domain_name):
-            infos.append(str(info, 'utf-8'))
-        result = [{
-            'domain': domain_name,
-            'favicon': 'http://www.%s/favicon.ico'%domain_name,
-            'status': int(log_db.get(domain_name)),
-            'count': len(infos),
-            'subdomains': infos,
-            'github': 'https://github.com/search?q=%s username password&type=Code&utf8=✓' % domain_name,
-        }]
-        return jsonify({'result': result, 'reason': 'Success', 'error_code': 200})
-    else:
-        return make_response(jsonify({'result': [], 'reason': 'Not found', 'error_code': 404}), 404)
+
 
 
 @app.route('/api/v1.1/domain/<string:domain_name>', methods=['GET'])
@@ -154,9 +136,9 @@ def api_get_domain(domain_name):
     :return: {'result': '', 'reason': '', 'error_code': ''}
     """
 
-    subdoamin_col = collection.subdoamin
+    subdomain_col = collection.subdomain
     try:
-        result = subdoamin_col.find({"domain":domain_name})
+        result = subdomain_col.find({"domain":domain_name})
         if result:
             return jsonify({'result': result[0], 'reason': 'Success', 'error_code': 200})
         else:
