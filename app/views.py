@@ -190,7 +190,7 @@ def get_subdomain():
 
 
 def scan_task_domain(domain):
-    task_count = int(os.popen('ps -h|grep subDomains-Xscan|wc -l').read())
+    task_count = int(os.popen('ps -h|grep scan.py|wc -l').read())
 
     if reg_exp(domain, 'domain'):
         if log_db.exists(domain):
