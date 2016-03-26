@@ -8,6 +8,8 @@
 pip3 install -r requirements.txt
 pip2 install redis
 apt-get install redis-server或者brew install redis
+apt-get install mongodb-server或者brew install mongodb
+
 ```
 
 ##启动
@@ -30,7 +32,7 @@ python3 run.py 80
 ```
 /etc/init.d/networking restart
 ```
- - 数据存储问题
+ - 数据存储问题(mongoDB todo)
 
  由于数据存储在Redis中,请安全启动Redis,并定时备份
  - 其他问题?
