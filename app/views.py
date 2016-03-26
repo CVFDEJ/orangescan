@@ -84,6 +84,7 @@ def create_task():
         queue_db.set(domain,taskinfo)
         log_db.set(domain, '-1')
         os.system('python %s %s&' % (scan_py, domain))
+        print (domain)
         return render_template('task.html',
                                result='任务添加成功',
                                domain=domain)
