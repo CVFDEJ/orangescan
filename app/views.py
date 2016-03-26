@@ -71,8 +71,7 @@ def create_task():
         return render_template('task.html',
                                result='任务已完成,点击查看',
                                domain=domain)
-    elif reg_exp(domain, 'domain') and not queue_db.exists(domain):
-
+    elif scan_task_domain(domain):
         print (domain)
         return render_template('task.html',
                                result='任务添加成功',
@@ -114,11 +113,8 @@ def api_get_domain(domain_name):
 @app.route('/api/v1.0/domain/<string:domain_name>', methods=['POST'])
 def api_scan_domain(domain_name):
     if scan_task_domain(domain_name):
-        result = [{
-            'domain': domain_name,
-            'status': int(log_db.get(domain_name)),
-        }]
-        return jsonify({'result': result, 'reason': 'Success', 'error_code': 200})
+        result = queue_db.get(domain_name)
+        return make_response(jsonify({'result': result, 'reason': 'Success', 'error_code': 200}))
     else:
         return make_response(jsonify({'result': [], 'reason': 'Fail', 'error_code': 500}), 500)
 
@@ -172,43 +168,27 @@ def reg_exp(q, qtype):
         return False
 
 
-def get_subdomain():
-    for task in queue_db.keys():
-        if not log_db.exists(task):
-            log_db.set(task, -1)
-        elif log_db.get(task) == '-1':
-            if int(os.popen('ps -h|grep scan.py|wc -l').read()) < 60:
-                os.system('python %s %s&' % (scan_py, str(task, 'utf-8')))
-            else:
-                pass
-        elif log_db.get(task) == '0':
-            queue_db.delete(task)
-        elif log_db.get(task) == '1':
-            queue_db.delete(task)
-        else:
-            pass
-
-
 def scan_task_domain(domain):
     task_count = int(os.popen('ps -h|grep scan.py|wc -l').read())
 
     if reg_exp(domain, 'domain'):
         if log_db.exists(domain):
             return True
-        elif task_count:
+        elif not queue_db.exists(domain):
             domain_hash = hashlib.md5()
             domain_hash.update(domain.encode('utf-8'))
-            taskinfo = {
+            taskinfo = [{
                 "domain": domain,
                 "date": time.ctime(),
                 "_id": domain_hash.hexdigest(),
                 "status": "0",
                 "timestamp": int(time.time()),
                 "addby": request.remote_addr,
-            }
+            }]
             queue_db.set(domain, taskinfo)
-            log_db.set(domain, -1)
-            os.system('python %s %s&' % (scan_py, domain))
+            if task_count <50:
+                log_db.set(domain, -1)
+                os.system('python2 %s %s&' % (scan_py, domain))
             return True
         else:
             return False
