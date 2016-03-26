@@ -177,14 +177,14 @@ def scan_task_domain(domain):
         elif not queue_db.exists(domain):
             domain_hash = hashlib.md5()
             domain_hash.update(domain.encode('utf-8'))
-            taskinfo = [{
+            taskinfo = {
                 "domain": domain,
                 "date": time.ctime(),
                 "_id": domain_hash.hexdigest(),
                 "status": "0",
                 "timestamp": int(time.time()),
                 "addby": request.remote_addr,
-            }]
+            }
             queue_db.set(domain, taskinfo)
             if task_count <50:
                 log_db.set(domain, -1)
