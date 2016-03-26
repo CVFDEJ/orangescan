@@ -4,7 +4,7 @@
 import os
 import re
 import time
-
+import hashlib
 import psutil
 from flask import render_template
 from flask import request
@@ -70,8 +70,18 @@ def create_task():
         return render_template('task.html',
                                result='任务已完成,点击查看',
                                domain=domain)
-    elif reg_exp(domain, 'domain'):
-        queue_db.set(domain, '0')
+    elif reg_exp(domain, 'domain') and not queue_db.exists(domain):
+        domain_hash = hashlib.md5()
+        domain_hash.update(domain.encode('utf-8'))
+        taskinfo = {
+            "domain": domain,
+            "date": time.ctime(),
+            "_id": domain_hash.hexdigest(),
+            "status": "0",
+            "timestamp": int(time.time()),
+            "addby":request.remote_addr,
+        }
+        queue_db.set(domain,taskinfo)
         log_db.set(domain, '-1')
         os.system('python %s %s&' % (scan_py, domain))
         return render_template('task.html',
