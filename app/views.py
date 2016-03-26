@@ -186,7 +186,7 @@ def scan_task_domain(domain):
                 "addby": request.remote_addr,
             }
             queue_db.set(domain, taskinfo)
-            if task_count <50:
+            if task_count <80:
                 log_db.set(domain, -1)
                 os.system('python2 %s %s&' % (scan_py, domain))
             return True
